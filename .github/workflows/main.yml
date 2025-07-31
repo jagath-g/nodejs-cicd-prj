@@ -57,10 +57,11 @@ jobs:
           push: true
           tags: ghcr.io/${{ github.repository }}:${{ matrix.tag }}
 
-      - name: Docker Scout CVE Scan on ${{ matrix.platform }}
-        uses: docker/scout-action@v1
+      - name: Docker Scout CVE Scan 
+        uses:  docker/scout-action@v1
         with:
           command: cves
-          image: ghcr.io/${{ github.repository }}:${{ matrix.tag }}
+          image: ghcr.io/your-org/your-image:arm64
+          platform: linux/arm64
           dockerhub-user: ${{ secrets.DOCKERHUB_USERNAME }}
           dockerhub-password: ${{ secrets.DOCKERHUB_PASSWORD }}
