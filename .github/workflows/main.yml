@@ -6,20 +6,11 @@ on:
 
 permissions:
   contents: read
-  packages: write  # Required to push to GHCR
+  packages: write
 
 jobs:
   build-and-scan:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        platform: [linux/amd64, linux/arm64]
-        include:
-          - platform: linux/amd64
-            tag: arm64-safe-amd64
-          - platform: linux/arm64
-            tag: arm64-safe-arm64
 
     steps:
       - name: Checkout code
@@ -53,19 +44,19 @@ jobs:
           username: ${{ secrets.username }}
           password: ${{ secrets.token }}
 
-      - name: Build and Push Docker Image for ${{ matrix.platform }}
+      - name: Build and Push Multi-Arch Docker Image (:latest)
         uses: docker/build-push-action@v5
         with:
           context: .
           file: ./Dockerfile
-          platforms: ${{ matrix.platform }}
+          platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository }}:${{ matrix.tag }}
+          tags: ghcr.io/${{ github.repository }}:latest
 
-      - name: Docker Scout CVE Scan
+      - name: Docker Scout CVE Scan (on :latest)
         uses: docker/scout-action@v1
         with:
           command: cves
-          image: ghcr.io/${{ github.repository }}:${{ matrix.tag }}
+          image: ghcr.io/${{ github.repository }}:latest
           dockerhub-user: ${{ secrets.DOCKERHUB_USERNAME }}
           dockerhub-password: ${{ secrets.DOCKERHUB_PASSWORD }}
