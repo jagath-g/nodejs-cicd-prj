@@ -11,6 +11,7 @@ permissions:
 jobs:
   build-and-scan:
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
         platform: [linux/amd64, linux/arm64]
@@ -56,7 +57,7 @@ jobs:
           push: true
           tags: ghcr.io/${{ github.repository }}:${{ matrix.tag }}
 
-      - name: Docker Scout CVE Scan
+      - name: Docker Scout CVE Scan on ${{ matrix.platform }}
         uses: docker/scout-action@v1
         with:
           command: cves
