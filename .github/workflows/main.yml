@@ -65,7 +65,7 @@ jobs:
         uses: docker/scout-action@v1
         with:
           image: ghcr.io/${{ github.repository }}:${{ matrix.tag }}
-          dockerhub-user: ${{ secrets.docker_username }}
-          dockerhub-password: ${{ secrets.token1 }}
+          dockerhub-user: abishnev
+          dockerhub-password: visionplus@9947
 
      
