@@ -50,8 +50,8 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ jagath-g }}
-          password: ${{ 0987J@jagath }}
+          username: jagath-g
+          password: 0987J@jagath 
 
       - name: Build and Push for ${{ matrix.platform }}
         uses: docker/build-push-action@v5
