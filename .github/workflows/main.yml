@@ -1,4 +1,4 @@
-name: Multi-Arch Docker Build & GHCR Push
+name: Multi-Arch Docker Build & GHCR Push with Scout Scan
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
 
 permissions:
   contents: read
-  packages: write  # Required to push to GHCR
+  packages: write
 
 jobs:
   build-and-push:
@@ -50,7 +50,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ secrets.username}}
+          username: ${{ secrets.username }}
           password: ${{ secrets.token }}
 
       - name: Build and Push for ${{ matrix.platform }}
@@ -66,3 +66,5 @@ jobs:
         uses: docker/scout-action@v1
         with:
           image: ghcr.io/${{ github.repository }}:${{ matrix.tag }}
+          dockerhub-user: jagathgiridharan
+          dockerhub-password: jagathgiridharan
