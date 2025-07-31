@@ -61,12 +61,11 @@ jobs:
           platforms: ${{ matrix.platform }}
           push: true
           tags: ghcr.io/${{ github.repository }}:${{ matrix.tag }}
-
       - name: Docker Scout Scan (authenticated)
         uses: docker/scout-action@v1
         with:
           image: ghcr.io/${{ github.repository }}:${{ matrix.tag }}
-          login: true
-        env:
-          DOCKERHUB_USERNAME: ${{ secrets.docker_user }}
-          DOCKERHUB_PASSWORD: ${{ secrets.token1 }}
+          dockerhub-user: ${{ secrets.docker_username }}
+          dockerhub-password: ${{ secrets.token1 }}
+
+     
