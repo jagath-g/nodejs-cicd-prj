@@ -25,6 +25,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Write Dockerfile
+        run: |
+          cat <<EOF > Dockerfile
+          # syntax=docker/dockerfile:1
+          FROM node:18-slim
+
+          WORKDIR /app
+
+          COPY package*.json ./
+          RUN npm ci --omit=dev
+
+          COPY . .
+
+          EXPOSE 80
+
+          CMD ["npm", "start"]
+          EOF
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -39,6 +57,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          file: ./Dockerfile
           platforms: ${{ matrix.platform }}
           push: true
           tags: ghcr.io/${{ github.repository }}:${{ matrix.tag }}
