@@ -69,5 +69,5 @@ jobs:
           command: cves
           image: ghcr.io/${{ github.repository }}:${{ matrix.tag }}
           dockerhub-user: ${{ secrets.DOCKERHUB_USERNAME }}
-          dockerhub-password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          dockerhub-password: ${{ secrets.DOCKERHUB_PASSWORD }} 
         
