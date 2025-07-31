@@ -1,4 +1,4 @@
-name: Multi-Arch Docker Build & Push to GHCR
+name: Multi-Arch Docker Build & GHCR Push
 
 on:
   push:
@@ -6,39 +6,35 @@ on:
 
 permissions:
   contents: read
-  packages: write  # for GHCR push
+  packages: write  # required for pushing to GHCR
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        platform: [linux/amd64, linux/arm64]
-
     steps:
-      - name: Checkout code
+      - name: Checkout source
         uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Log in to GHCR
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and Push Docker Image
+      - name: Build & Push Multi-Arch Docker Image
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          platforms: ${{ matrix.platform }}
-          tags: ghcr.io/${{ github.repository }}:${{ matrix.platform }}
+          platforms: linux/amd64,linux/arm64
+          tags: ghcr.io/${{ github.repository }}:latest
 
       - name: Docker Scout Scan
         uses: docker/scout-action@v1
         with:
-          image: ghcr.io/${{ github.repository }}:${{ matrix.platform }}
+          image: ghcr.io/${{ github.repository }}:latest
