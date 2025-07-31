@@ -65,5 +65,7 @@ jobs:
       - name: Docker Scout CVE Scan
         uses: docker/scout-action@v1
         with:
-          command: cves
-          image: ghcr.io/${{ github.repository }}:${{ matrix.tag }}
+         command: cves
+         image: ghcr.io/${{ github.repository }}:${{ matrix.tag }}
+         dockerhub-user: ${{ secrets.DOCKERHUB_USERNAME }}
+         dockerhub-password: ${{ secrets.DOCKERHUB_PASSWORD }}
