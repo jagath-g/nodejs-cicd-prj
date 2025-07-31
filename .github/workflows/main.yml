@@ -9,7 +9,7 @@ permissions:
   packages: write  # Required to push to GHCR
 
 jobs:
-  build-and-push:
+  build-and-scan:
     runs-on: ubuntu-latest
 
     strategy:
