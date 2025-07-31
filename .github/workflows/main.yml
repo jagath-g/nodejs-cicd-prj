@@ -44,14 +44,14 @@ jobs:
           username: ${{ secrets.username }}
           password: ${{ secrets.token }}
 
-      - name: Build and Push Multi-Arch Image (latest)
+      - name: Build and Push Multi-Arch Image
         uses: docker/build-push-action@v5
         with:
           context: .
           file: ./Dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: ghcr.io/${{ github.repository }}:latest
+          tags: ghcr.io/${{ github.repository }}
 
 
       - name: Docker Scout CVE Scan on Multi-Arch (:latest)
