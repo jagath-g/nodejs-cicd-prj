@@ -54,7 +54,7 @@ jobs:
           file: ./Dockerfile
           platforms: ${{ matrix.platform }}
           push: true
-          tags: ghcr.io/${{ github.repository }}:${{ matrix.tag }}:on latest
+          tags: ghcr.io/${{ github.repository }}:${{ matrix.tag }}:latest
 
       - name: Docker Scout CVE Scan (on latest)
         uses: docker/scout-action@v1
