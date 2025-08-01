@@ -1,4 +1,4 @@
-name: Multi-Arch Docker Build & GHCR Push with Scout Scan
+name: Multi-Arch Docker Build & GHCR Push with SES Notifications
 
 on:
   push:
@@ -7,11 +7,11 @@ on:
 permissions:
   contents: read
   packages: write
+  id-token: write  # REQUIRED for OIDC authentication
 
 jobs:
   build-and-scan:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         platform: [linux/amd64, linux/arm64]
@@ -65,34 +65,42 @@ jobs:
           dockerhub-user: ${{ secrets.DOCKERHUB_USERNAME }}
           dockerhub-password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-    notify-success:
+  notify-success:
     needs: build-and-scan
     if: success()
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # Needed for assuming IAM role via OIDC
     steps:
-      - name: Send success email via SES
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::399359779313:role/role2g234
+          aws-region: eu-north-1
+
+      - name: Send SES success email
         run: |
           aws ses send-email \
             --from "${{ secrets.SES_FROM_ADDRESS }}" \
             --destination "ToAddresses=${{ secrets.SES_TO_ADDRESS }}" \
-            --message "Subject={Data='✅ Docker Build Success'},Body={Text={Data='Docker build and scan for ${{ github.repository }} completed successfully.'}}"
-        env:
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            --message "Subject={Data='✅ Docker Build Success'},Body={Text={Data='Build and scan for ${{ github.repository }} succeeded.'}}"
 
   notify-failure:
     needs: build-and-scan
     if: failure()
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
-      - name: Send failure email via SES
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::399359779313:role/role2g234
+          aws-region: eu-north-1
+
+      - name: Send SES failure email
         run: |
           aws ses send-email \
             --from "${{ secrets.SES_FROM_ADDRESS }}" \
             --destination "ToAddresses=${{ secrets.SES_TO_ADDRESS }}" \
-            --message "Subject={Data='❌ Docker Build Failed'},Body={Text={Data='Docker build or scan for ${{ github.repository }} failed. Please check the logs.'}}"
-        env:
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            --message "Subject={Data='❌ Docker Build Failed'},Body={Text={Data='Build or scan for ${{ github.repository }} failed. Please check logs.'}}"
