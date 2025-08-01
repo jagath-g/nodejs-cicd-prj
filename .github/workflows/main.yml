@@ -70,13 +70,14 @@ jobs:
     if: success()
     runs-on: ubuntu-latest
     permissions:
-      id-token: write  # Needed for assuming IAM role via OIDC
+      id-token: write
+      contents: read  #Needed for assuming IAM role via OIDC
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: arn:aws:iam::399359779313:role/role2g234
-          aws-region: eu-north-1
+          aws-region: us-east-1
 
       - name: Send SES success email
         run: |
