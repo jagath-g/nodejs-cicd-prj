@@ -76,7 +76,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::399359779313:role/role2g234
+          role-to-assume: arn:aws:iam::399359779313:role/dggfdbhch
           aws-region: us-east-1
 
       - name: Send SES success email
