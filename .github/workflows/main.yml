@@ -95,6 +95,6 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
           inline-script: |
             aws ses send-email \
-              --from "${{ secrets.SES_gjagath522@gmail.com }}" \
-              --destination "ToAddresses=${{ secrets.SES_gj1140486@gmail.com }}" \
+              --from "${{ secrets.SES_FROM_ADDRESS }}" \
+              --destination "ToAddresses=${{ secrets.SES_TO_ADDRESS }}" \
               --message "Subject={Data='❌ Docker Build Failed'},Body={Text={Data='Docker build or scan for ${{ github.repository }} failed. Please check the logs.'}}"
