@@ -71,7 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send success email via SES
-        uses: aws-actions/aws-cli-action@v1
+        uses: aws-actions/aws-cli@v1
         with:
           # IMPORTANT: Replace 'YOUR_IAM_ROLE_ARN_GOES_HERE' with the actual ARN of your IAM role from AWS!
           role-to-assume: arn:aws:iam::399359779313:role/role2g234
@@ -88,7 +88,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send failure email via SES
-        uses: aws-actions/aws-cli-action@v1
+        uses: aws-actions/aws-cli@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
