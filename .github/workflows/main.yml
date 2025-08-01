@@ -78,8 +78,8 @@ jobs:
           aws-region: eu-north-1 # Example: us-east-1
           inline-script: |
             aws ses send-email \
-              --from "${{ secrets.SES_gjagath522@gmail.com }}" \
-              --destination "ToAddresses=${{ secrets.SES_gj1140486@gmail.com }}" \
+              --from "${{ secrets.SES_FROM_ADDRESS }}" \
+              --destination "ToAddresses=${{ secrets.SES_TO_ADDRESS }}" \
               --message "Subject={Data='✅ Docker Build Success'},Body={Text={Data='Docker build and scan for ${{ github.repository }} completed successfully.'}}"
 
   notify-failure:
